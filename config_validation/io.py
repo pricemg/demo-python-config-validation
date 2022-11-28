@@ -18,3 +18,20 @@ def read_toml(file: str) -> dict[str, any]:
         contents = tomllib.load(file)
     
     return contents
+
+
+if __name__ == '__main__':
+    from pprint import pprint
+
+
+    yaml_config = read_yaml('../configs/config.yaml')
+    print('\nyaml config:\n')
+    pprint(yaml_config)
+
+    toml_config = read_toml('../configs/config.toml')
+    print('\ntoml config:\n')
+    pprint(toml_config)
+
+    match = toml_config == yaml_config
+
+    print(f'Does read toml file match yaml file? {match}')

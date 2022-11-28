@@ -1,10 +1,47 @@
 # demo-python-config-validation
 Demo of loading and validating a config file in python.
 
+Loading either toml or yaml files will yield the same result:
+```python
+ >>> python3.11 io.py
+
+yaml config:
+
+{'clients': {'data': [['gamma', 'delta'], [1, 2]], 'hosts': ['alpha', 'omega']},
+ 'database': {'connection_max': 5000,
+              'enabled': True,
+              'ports': [8001, 8001, 8002],
+              'server': '192.168.1.1'},
+ 'logs': {'path': './my/logs.json', 'save': True},
+ 'owner': {'dob': datetime.datetime(1979, 5, 27, 7, 32, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=57600))),
+           'name': 'Tom Preston-Werner'},
+ 'servers': {'alpha': {'dc': 'eqdc10', 'ip': '10.0.0.1'},
+             'beta': {'dc': 'eqdc10', 'ip': '10.0.0.2'}},
+ 'title': 'Config Example'}
+
+toml config:
+
+{'clients': {'data': [['gamma', 'delta'], [1, 2]], 'hosts': ['alpha', 'omega']},
+ 'database': {'connection_max': 5000,
+              'enabled': True,
+              'ports': [8001, 8001, 8002],
+              'server': '192.168.1.1'},
+ 'logs': {'path': './my/logs.json', 'save': True},
+ 'owner': {'dob': datetime.datetime(1979, 5, 27, 7, 32, tzinfo=datetime.timezone(datetime.timedelta(days=-1, seconds=57600))),
+           'name': 'Tom Preston-Werner'},
+ 'servers': {'alpha': {'dc': 'eqdc10', 'ip': '10.0.0.1'},
+             'beta': {'dc': 'eqdc10', 'ip': '10.0.0.2'}},
+ 'title': 'Config Example'}
+
+Does read toml file match yaml file? True
+```
+
+Validation of dictionaries (i.e. loaded config files) can be achieved through
+the use of `pydantic` models.
 
 ```python
 >>> python3.11 validators.py  
-                                                                                                                                                            [main]
+
 =====================
 Validating config:
 {'name': 'Matt Price', 'dob': datetime.datetime(1901, 1, 1, 0, 0)}

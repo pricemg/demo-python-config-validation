@@ -1,4 +1,4 @@
-title = "TOML Example"
+title = "Config Example"
  
 [owner]
 name = "Tom Preston-Werner"
@@ -30,4 +30,4 @@ hosts = [
 
 [logs]
 save = true
-logfile = "./my/logs.json"
+path = "./my/logs.json"
