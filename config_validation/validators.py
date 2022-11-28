@@ -105,6 +105,7 @@ class ValidateConfig(BaseModel):
 def try_validation(
     config: Mapping[str, Any],
     Validator: BaseModel,
+    outcome: str = None,
 ) -> None:
     """Run config through validator, catching any validation error.
 
@@ -117,6 +118,8 @@ def try_validation(
         Configuration mapping to pass through the validator
     Validator
         Validation model to run config through.
+    outcome
+        Description of what the passed config should do.
     
     Returns
     -------
@@ -128,6 +131,9 @@ def try_validation(
         Validating config:
         {config}
     """))
+
+    if outcome:
+        print(f'This will be a:{outcome}')
 
     try:
         validated_config =  Validator(**config).dict()
@@ -155,69 +161,85 @@ if __name__ == '__main__':
     # config = read_yaml('configs/config.yaml')
     # try_validation(config, ValidateConfig)
 
-    # Valid configuration.
+    outcome = dedent("""
+    Valid configuration.
+    """)
     owner = {
         'name': 'Matt Price',
         'dob': datetime(1901, 1, 1),
     }
-    try_validation(owner, ValidateOwner)
+    try_validation(owner, ValidateOwner, outcome)
 
-    # Valid configuration: location field not in model so not present after
-    # validation
+    outcome = dedent("""
+    Valid configuration: location field not in model so not present after
+    validation.
+    """)
     owner = {
         'name': 'Matt Price',
         'dob': datetime(1901, 1, 1),
         'location': 'Home',
     }
-    try_validation(owner, ValidateOwner)
+    try_validation(owner, ValidateOwner, outcome)
 
-    # Invalid configuration: both fields fail checks.
+    outcome = dedent("""
+    Invalid configuration: both fields fail checks.
+    """)
     owner = {
         'name': 'Matt',
         'dob': '1901-01-01',
     }
-    try_validation(owner, ValidateOwner)
+    try_validation(owner, ValidateOwner, outcome)
 
-    # Valid configuration: server field converted to IPv4 address object, ports
-    # field converted to a list.
+    outcome = dedent("""
+    Valid configuration: server field converted to IPv4 address object, ports
+    field converted to a list.
+    """)
     database = {
         'server': '192.168.1.1',
         'ports': 8080,
         'connection_max': 5000.1,
         'enabled': True,
     }
-    try_validation(database, ValidateDatabase)
+    try_validation(database, ValidateDatabase, outcome)
 
-    # Valid configuration: server field converted to IPv4 address object
-    # enabled field not specified so set to default, connection_max converte
-    # to a float.
+    outcome = dedent("""
+    Valid configuration: server field converted to IPv4 address object
+    enabled field not specified so set to default, connection_max converted
+    to a float.
+    """)
     database = {
         'server': '192.168.1.1',
         'ports': [ 8001, 8001, 8002],
         'connection_max': 5000,
     }
-    try_validation(database, ValidateDatabase)
+    try_validation(database, ValidateDatabase, outcome)
 
-    # Invalid configuration: one entry in ports is not in range.
+    outcome = dedent("""
+    Invalid configuration: one entry in ports is not in range.
+    """)
     database = {
         'server': '192.168.1.1',
         'ports': [ 8001, 8001, 8002, 8081],
         'connection_max': 5000,
         'enabled': True,
     }
-    try_validation(database, ValidateDatabase)
+    try_validation(database, ValidateDatabase, outcome)
 
-    # Valid configuration: path field converted to Path object
+    outcome = dedent("""
+    Valid configuration: path field converted to Path object
+    """)
     logs = {
         'save': True,
         'path': './my/logs.json'
     }
-    try_validation(logs, ValidateLogs)
+    try_validation(logs, ValidateLogs, outcome)
 
-    # Invalid configuration: path field converted to Path object, file at path
-    # already exists.
+    outcome = dedent("""
+    Invalid configuration: path field converted to Path object, file at path
+    already exists.
+    """)
     logs = {
         'save': True,
         'path': './validators.py'
     }
-    try_validation(logs, ValidateLogs)
+    try_validation(logs, ValidateLogs, outcome)
